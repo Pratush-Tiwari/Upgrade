@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Definitive React Full Stack Interview Guide</title>
+    <style>
+        :root {
+            --bg-color: #1e1e2e;
+            --sidebar-bg: #1a1a2a;
+            --main-bg: #161625;
+            --text-color: #cdd6f4;
+            --header-color: #89b4fa;
+            --accent-color: #f5c2e7;
+            --code-bg: #313244;
+            --border-color: #45475a;
+            --link-color: #89b4fa;
+            --link-hover: #a6e3a1;
+            --question-bg: rgba(245, 194, 231, 0.05);
+            --pitfall-bg: rgba(250, 179, 135, 0.05);
+            --pitfall-border: #fab387;
+            --scroll-bar-bg: #45475a;
+            --scroll-bar-thumb: #6c7086;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            font-size: 18px;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: var(--sidebar-bg);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            padding: 25px;
+            border-right: 1px solid var(--border-color);
+        }
+        
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: var(--sidebar-bg);
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: var(--scroll-bar-thumb);
+            border-radius: 4px;
+        }
+
+        .sidebar h2 {
+            color: var(--header-color);
+            font-size: 1.6em;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 12px 0;
+        }
+
+        .sidebar ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1.05em;
+            transition: color 0.2s, transform 0.2s;
+            display: block;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .sidebar ul li a:hover {
+            color: var(--link-hover);
+            background-color: var(--code-bg);
+            transform: translateX(5px);
+        }
+        
+        .sidebar .topic-group {
+            margin-top: 25px;
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 1.1em;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .main-content {
+            margin-left: 350px;
+            padding: 40px;
+            width: calc(100% - 400px);
+        }
+
+        section {
+            margin-bottom: 70px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 50px;
+        }
+
+        h1, h2, h3, h4, h5 {
+            color: var(--header-color);
+            font-weight: 600;
+        }
+        
+        h1 { font-size: 3.8em; margin-bottom: 25px; text-align: center; color: var(--accent-color); line-height: 1.2; }
+        h2 { font-size: 3em; border-bottom: 2px solid var(--accent-color); padding-bottom: 15px; margin-top: 40px; }
+        h3 { font-size: 2.2em; margin-top: 45px; }
+        h4 { font-size: 1.6em; color: var(--accent-color); margin-top: 40px; border-left: 3px solid var(--accent-color); padding-left: 15px; }
+        h5 { font-size: 1.2em; color: var(--header-color); }
+
+        p, li {
+            font-size: 1.1em;
+        }
+
+        ul, ol {
+            padding-left: 30px;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: var(--link-hover);
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            background-color: var(--code-bg);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        
+        pre code {
+            padding: 0;
+            background: none;
+            font-size: 1em;
+        }
+
+        .callout {
+            padding: 25px;
+            margin-top: 30px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .interview-questions {
+            background-color: var(--question-bg);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .pitfalls {
+            background-color: var(--pitfall-bg);
+            border-left: 4px solid var(--pitfall-border);
+        }
+
+        .pitfalls h4 {
+            color: var(--pitfall-border);
+            border-left-color: var(--pitfall-border);
+        }
+        
+        .interview-questions h4 {
+            margin-top: 0;
+            color: var(--accent-color);
+        }
+        
+        .interview-questions ul, .pitfalls ul {
+            padding-left: 20px;
+        }
+        
+        .interview-questions li, .pitfalls li {
+            margin-bottom: 20px;
+        }
+        
+        .interview-questions strong, .pitfalls strong {
+            color: var(--header-color);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <h2>Interview Guide</h2>
+            <ul>
+                <li class="topic-group">React</li>
+                <li><a href="#react-fundamentals">React Fundamentals</a></li>
+                <li><a href="#hooks-deep-dive">Hooks Deep Dive</a></li>
+                <li><a href="#advanced-react-patterns">Advanced React Patterns</a></li>
+                <li><a href="#state-management">State Management</a></li>
+                <li><a href="#react-router">React Router</a></li>
+                <li><a href="#performance-optimization">Performance Optimization</a></li>
+                
+                <li class="topic-group">JavaScript</li>
+                <li><a href="#modern-javascript">Modern JavaScript (ES6+)</a></li>
+                <li><a href="#advanced-javascript">Advanced JavaScript</a></li>
+
+                <li class="topic-group">Browser & Web APIs</li>
+                <li><a href="#web-apis">Web APIs & Browser</a></li>
+
+                <li class="topic-group">CSS</li>
+                <li><a href="#css-styling">CSS & Styling</a></li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <header>
+                <h1>The Definitive React Full Stack Interview Guide</h1>
+            </header>
+
+            <!-- React Fundamentals Section -->
+            <section id="react-fundamentals">
+                <h2>React Fundamentals</h2>
+                
+                <h3>JSX (JavaScript XML)</h3>
+                <h4>Explanation</h4>
+                <p>JSX is a syntax extension for JavaScript that allows you to write UI structures in a way that looks like HTML, but directly within your JavaScript code. It is not a separate language, nor is it understood by browsers natively. It's "syntactic sugar" that makes writing React components more intuitive and readable.</p>
+                
+                <h4>Why to Use It</h4>
+                <p>The primary problem JSX solves is the separation of concerns. Traditionally, UI markup (HTML), logic (JS), and styling (CSS) were kept in separate files. However, in modern component-based architecture, the logic and markup for a component are inherently coupled. JSX allows you to keep this coupled logic and markup together in one place, making components truly self-contained and easier to reason about.</p>
+
+                <h4>How to Use It</h4>
+                <p>During the build process, a transpiler like Babel converts every JSX tag into a plain JavaScript function call to <code>React.createElement()</code>. This function returns a simple object, a "React Element," which is a lightweight description of what should be rendered on the screen.</p>
+                <pre><code>// This JSX code:
+const user = { name: 'Alice', avatarUrl: '...' };
+const element = (
+  &lt;div className="profile"&gt;
+    &lt;h1&gt;Welcome, {user.name}!&lt;/h1&gt;
+    &lt;img src={user.avatarUrl} alt="User Avatar" /&gt;
+  &lt;/div&gt;
+);
+
+// Is converted into this JavaScript by Babel:
+const element = React.createElement(
+  'div',
+  { className: 'profile' },
+  React.createElement('h1', null, 'Welcome, ', user.name, '!'),
+  React.createElement('img', { src: user.avatarUrl, alt: 'User Avatar' })
+);
+</code></pre>
+
+                <h4>Common Pitfalls & Gotchas</h4>
+                <div class="callout pitfalls">
+                    <ul>
+                        <li><strong>Single Root Element:</strong> A component must return a single root JSX element. If you need to return multiple elements, wrap them in a <code>&lt;React.Fragment&gt;</code> or the shorthand <code>&lt;&gt;...&lt;/&gt;</code>.</li>
+                        <li><strong>Reserved Keywords:</strong> Since JSX is JavaScript, some HTML attributes conflict with JS keywords. The most common are <code>class</code> (which becomes <code>className</code>) and <code>for</code> (which becomes <code>htmlFor</code>).</li>
+                        <li><strong>Self-Closing Tags:</strong> All tags must be closed. Tags like <code>&lt;img&gt;</code> or <code>&lt;br&gt;</code> must be self-closed: <code>&lt;img /&gt;</code>, <code>&lt;br /&gt;</code>.</li>
+                        <li><strong>CamelCase Attributes:</strong> Most multi-word HTML attributes are written in camelCase in JSX, e.g., <code>onclick</code> becomes <code>onClick</code>, <code>tabindex</code> becomes <code>tabIndex</code>.</li>
+                    </ul>
+                </div>
+
+                <div class="callout interview-questions">
+                    <h4>Interview Questions</h4>
+                    <ul>
+                        <li><strong>What is JSX and how is it different from HTML?</strong>
+                            <p>Answer: JSX is a syntax extension for JavaScript, not HTML. While it looks like HTML, it allows you to embed JavaScript expressions directly, uses camelCase for attributes, and must be transpiled into `React.createElement` calls. It provides the full power of JavaScript within your markup.</p>
+                        </li>
+                        <li><strong>Why can a React component only return one element?</strong>
+                            <p>Answer: Because under the hood, a component is a function that returns a single `React.createElement` call, which produces a single object representing the UI tree. Returning multiple elements would be like a function trying to return two separate, unrelated values without an array or object wrapper. To solve this, you wrap multiple elements in a single root element or a `React.Fragment`.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <h3>Virtual DOM and Reconciliation</h3>
+                <h4>Explanation</h4>
+                <p>The Virtual DOM (VDOM) is a programming concept where a virtual, lightweight representation of the UI is kept in memory and synced with the "real" DOM. It's a JavaScript object that mirrors the structure of the real DOM. It's a key part of what makes React performant.</p>
+
+                <h4>Why to Use It</h4>
+                <p>Directly manipulating the real DOM is computationally expensive. Every time you change the DOM, the browser may have to perform a **reflow** (recalculating the layout of elements) and a **repaint** (redrawing the screen). Doing this frequently for many small changes can make an application feel slow and janky. The VDOM solves this by acting as a buffer, allowing React to batch updates and apply them in the most efficient way possible.</p>
+
+                <h4>How to Use It</h4>
+                <p>As a developer, you don't interact with the VDOM directly. You simply update your component's state, and React handles the VDOM operations for you. This process is called **Reconciliation**.</p>
+                <ol>
+                    <li><strong>State Update:</strong> You call <code>setState</code> or a similar function.</li>
+                    <li><strong>New VDOM Tree:</strong> React calls your component's `render` method (or just runs the functional component) to create a new VDOM tree.</li>
+                    <li><strong>Diffing:</strong> React compares this new VDOM tree with the one from the previous render. This is the "diffing" algorithm. It uses efficient heuristics to find the differences, such as assuming that two elements of different types will produce different trees, and using `key` props to track list items.</li>
+                    <li><strong>Batched DOM Updates:</strong> React calculates the minimal set of operations required to update the real DOM to match the new VDOM. It then applies these changes all at once, minimizing reflows and repaints.</li>
+                </ol>
+
+                <h4>Common Pitfalls & Gotchas</h4>
+                <div class="callout pitfalls">
+                    <ul>
+                        <li><strong>Not using `key` props correctly:</strong> Failing to provide stable, unique keys for list items is the most common mistake. It can lead to poor performance and bugs with component state because React can't correctly identify which items have moved, been added, or been removed.</li>
+                        <li><strong>Mutating state directly:</strong> If you mutate state directly (e.g., `this.state.items.push(newItem)`) instead of using `setState`, React won't know that the state has changed, and no re-render or reconciliation will occur.</li>
+                    </ul>
+                </div>
+
+                <div class="callout interview-questions">
+                    <h4>Interview Questions</h4>
+                    <ul>
+                        <li><strong>What is Reconciliation?</strong>
+                            <p>Answer: Reconciliation is the process React uses to update the real DOM. It involves creating a new Virtual DOM tree when state changes, comparing it to the previous tree (diffing), and then applying the minimal necessary changes to the actual DOM. This is React's core algorithm for achieving high performance.</p>
+                        </li>
+                        <li><strong>What are keys in React and why are they important?</strong>
+                            <p>Answer: Keys are special string attributes you need to include when creating lists of elements. They must be unique among siblings. Keys give the elements a stable identity, which helps React identify which items have changed, are added, or are removed during the reconciliation process. This allows for much more efficient updates and prevents bugs related to component state being mismatched with the data it represents.</p>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Hooks Deep Dive Section -->
+            <section id="hooks-deep-dive">
+                <h2>Hooks Deep Dive</h2>
+                <p>Hooks are functions that let you “hook into” React state and lifecycle features from functional components. They revolutionized how React components are written, allowing for powerful, stateful logic without needing to write a class.</p>
+
+                <h3><code>useState</code></h3>
+                <h4>Explanation</h4>
+                <p>The <code>useState</code> hook is the most fundamental hook. It allows you to add a single piece of state to a functional component. When you call <code>useState</code>, you pass it an initial value. It returns an array containing two elements: the current state value, and a function to update that value.</p>
+                
+                <h4>Why to Use It</h4>
+                <p>Components often need to change what's on the screen in response to user interaction. State provides a way to "remember" information like user input, whether a button is toggled, or data fetched from an API. When the state is updated, React automatically re-renders the component to reflect the new state.</p>
+
+                <h4>How to Use It</h4>
+                <p>You call it at the top level of your component. The update function can be called with a new value directly, or with a function (a "functional update") if the new state depends on the previous state.</p>
+                <pre><code>import { useState } from 'react';
+
+function Counter() {
+  // The initial state is 0.
+  // `count` holds the current value.
+  // `setCount` is the function to update it.
+  const [count, setCount] = useState(0);
+
+  // A simple update with a direct value
+  const handleReset = () => {
+    setCount(0);
+  };
+
+  // A functional update, which is safer for state that depends on the previous value
+  const handleIncrement = () => {
+    // `prevCount` is guaranteed by React to be the latest state value.
+    setCount(prevCount => prevCount + 1);
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;You clicked {count} times&lt;/p&gt;
+      &lt;button onClick={handleIncrement}&gt;Click me&lt;/button&gt;
+      &lt;button onClick={handleReset}&gt;Reset&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+                <h4>Common Pitfalls & Gotchas</h4>
+                <div class="callout pitfalls">
+                    <ul>
+                        <li><strong>Not Using Functional Updates:</strong> If you update state multiple times in a single event handler and the new state depends on the old, failing to use the functional update form (<code>setCount(c => c + 1)</code>) can lead to bugs. React batches updates, so without the function, all updates in the batch will see the same initial state value.</li>
+                        <li><strong>State Updates are Asynchronous:</strong> After you call <code>setCount</code>, the <code>count</code> variable will not be updated immediately in the code that follows. The re-render is scheduled, and you will get the new value in the *next* render of the component.</li>
+                        <li><strong>Complex State:</strong> While you can store objects and arrays in <code>useState</code>, if you find your state logic is becoming very complex with many interconnected fields, it might be a sign you should use <code>useReducer</code> instead.</li>
+                    </ul>
+                </div>
+
+                <div class="callout interview-questions">
+                    <h4>Interview Questions</h4>
+                    <ul>
+                        <li><strong>What is a functional update in `useState` and why is it important?</strong>
+                            <p>Answer: A functional update is when you pass a function to the state setter (e.g., `setCount(prevCount => prevCount + 1)`). This is important because state updates in React are asynchronous and can be batched. If you update state multiple times in one go, the functional update form guarantees that each update is based on the correct, most recent previous state, preventing race conditions.</p>
+                        </li>
+                        <li><strong>If I call a `setState` hook, does the component re-render immediately?</strong>
+                            <p>Answer: No. Calling `setState` does not cause an immediate re-render. It schedules a re-render to happen in the near future. You cannot rely on the state variable being updated on the next line of code. The new state value will only be available in the subsequent render of the component.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <h3><code>useEffect</code></h3>
+                <h4>Explanation</h4>
+                <p>The <code>useEffect</code> hook is used for handling "side effects" in your components. Side effects are any operations that affect something outside of the component's render logic, such as fetching data from an API, setting up subscriptions or timers, or manually manipulating the DOM.</p>
+
+                <h4>Why to Use It</h4>
+                <p>It allows you to run code in response to the component's lifecycle. Without it, performing side effects directly in the component body would be incorrect, as the component body should be reserved for pure rendering logic and would run on every single render, leading to unpredictable behavior and performance issues.</p>
+
+                <h4>How to Use It</h4>
+                <p>The hook takes two arguments: a function to run (the "effect") and an optional dependency array that controls *when* the effect is run.</p>
+                <pre><code>import { useState, useEffect } from 'react';
+
+function UserProfile({ userId }) {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // This is the effect function.
+    console.log('Fetching data for user:', userId);
+    
+    // 1. Perform the side effect (e.g., API call)
+    fetch(`https://api.example.com/users/${userId}`)
+      .then(response => response.json())
+      .then(data => setUser(data));
+
+    // 2. (Optional) Return a cleanup function.
+    // This runs when the component unmounts or before the effect runs again.
+    return () => {
+      console.log('Cleaning up previous effect for user:', userId);
+      // Here you might cancel a pending API request.
+    };
+  }, [userId]); // 3. The dependency array. The effect re-runs if `userId` changes.
+
+  if (!user) {
+    return &lt;div&gt;Loading...&lt;/div&gt;;
+  }
+
+  return &lt;h1&gt;{user.name}&lt;/h1&gt;;
+}</code></pre>
+
+                <h4>Common Pitfalls & Gotchas</h4>
+                <div class="callout pitfalls">
+                    <ul>
+                        <li><strong>Missing Dependency Array:</strong> If you omit the dependency array entirely, the effect will run after *every single render*, which can easily cause infinite loops if the effect itself triggers a state update.</li>
+                        <li><strong>Incorrect Dependencies:</strong> If you use a prop or state variable inside your effect but forget to include it in the dependency array, your effect will become "stale." It will close over the initial value of that variable and will not see its updated value on subsequent re-renders, leading to subtle bugs. Your linter will usually warn you about this.</li>
+                        <li><strong>Forgetting Cleanup:</strong> For effects that create subscriptions, timers, or event listeners, failing to return a proper cleanup function will cause memory leaks.</li>
+                    </ul>
+                </div>
+
+                <div class="callout interview-questions">
+                    <h4>Interview Questions</h4>
+                    <ul>
+                        <li><strong>Explain the `useEffect` dependency array in detail.</strong>
+                            <p>Answer: The dependency array is the second argument to `useEffect`. It's an array of variables that the effect depends on. React will do a shallow comparison of these values between renders. If any value in the array has changed, React will re-run the effect. If the array is empty (`[]`), the effect runs only once on mount. If the array is omitted, the effect runs after every render. It's the primary mechanism for controlling when side effects occur.</p>
+                        </li>
+                        <li><strong>What is the purpose of the cleanup function in `useEffect`?</strong>
+                            <p>Answer: The cleanup function is returned from the effect function. Its purpose is to prevent memory leaks and unwanted behavior. It runs when the component unmounts, or if the component re-renders and the dependencies have changed, it runs *before* the next effect is executed. You use it to clean up any resources established by the effect, such as cancelling timers, unsubscribing from data sources, or removing event listeners.</p>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Advanced React Patterns Section -->
+            <section id="advanced-react-patterns">
+                <h2>Advanced React Patterns</h2>
+                <p>These are patterns for solving common, complex problems in React applications, especially around logic reuse, component API design, and error handling. Understanding them demonstrates a deeper architectural knowledge of React.</p>
+
+                <h3>Higher-Order Components (HOCs)</h3>
+                <h4>Explanation</h4>
+                <p>A Higher-Order Component (HOC) is an advanced pattern for reusing component logic. It is not a specific API in React, but a pattern that emerges from React's compositional nature. An HOC is a function that takes a component as an argument and returns a new, enhanced component.</p>
+
+                <h4>Why to Use It</h4>
+                <p>The primary reason to use HOCs was to share logic between components without repeating code. For example, you could have several components that need access to the current window size, or require user authentication. An HOC could abstract this logic away and inject the necessary data or behavior as props into the wrapped component.</p>
+
+                <h4>How to Use It</h4>
+                <p>You create a function that accepts a component (the `WrappedComponent`). Inside, you define a new component that renders the `WrappedComponent`, passing through any original props and injecting new ones.</p>
+                <pre><code>// This HOC injects the current mouse position as props.
+function withMousePosition(WrappedComponent) {
+  // It returns a new component...
+  return function(props) {
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+    useEffect(() => {
+      const handleMouseMove = (event) => {
+        setMousePosition({ x: event.clientX, y: event.clientY });
+      };
+
+      window.addEventListener('mousemove', handleMouseMove);
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove);
+      };
+    }, []);
+
+    // ...that renders the original component with the new props.
+    return &lt;WrappedComponent {...props} mousePosition={mousePosition} /&gt;;
+  };
+}
+
+// A simple component that will be enhanced
+function DisplayMousePosition({ mousePosition }) {
+  return (
+    &lt;div&gt;
+      The mouse position is ({mousePosition.x}, {mousePosition.y})
+    &lt;/div&gt;
+  );
+}
+
+// Create the enhanced component
+const DisplayMousePositionWithData = withMousePosition(DisplayMousePosition);</code></pre>
+
+                <h4>Common Pitfalls & Gotchas</h4>
+                <div class="callout pitfalls">
+                    <ul>
+                        <li><strong>Wrapper Hell:</strong> Using multiple HOCs on a single component leads to deeply nested component trees in the React DevTools (e.g., <code>withRouter(withAuth(withLogging(MyComponent)))</code>), which can be difficult to debug.</li>
+                        <li><strong>Prop Name Collisions:</strong> An HOC might inject a prop with a name that is already used by your component, leading to overwritten props and bugs.</li>
+                        <li><strong>Static Methods Are Not Passed:</strong> The HOC creates a new container component, so any static methods on the original component are lost.</li>
+                        <li><strong>Modern Relevance:</strong> HOCs are now considered a legacy pattern. **Custom Hooks solve the exact same problems in a much cleaner, simpler, and more composable way without any of the pitfalls mentioned above.**</li>
+                </ul>
+            </div>
+
+                <div class="callout interview-questions">
+                    <h4>Interview Questions</h4>
+                    <ul>
+                        <li><strong>What is a Higher-Order Component and what problem does it solve?</strong>
+                            <p>Answer: An HOC is a function that takes a component and returns a new component. It was a pattern used to solve the problem of sharing logic between components. For example, an HOC could handle data fetching or subscriptions and then pass that data as props to the wrapped component.</p>
+                        </li>
+                        <li><strong>Why are custom hooks generally preferred over HOCs today?</strong>
+                            <p>Answer: Custom hooks are preferred because they are simpler and more direct. They don't introduce extra components into the tree, avoiding "wrapper hell." They also don't have issues with prop name collisions, as you explicitly destructure the values returned from the hook. Hooks make the flow of data more explicit and are easier to type with TypeScript.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <h3>Render Props</h3>
+                <h4>Explanation</h4>
+                <p>The term "render prop" refers to a technique for sharing code between React components using a prop whose value is a function. A component with a render prop takes a function that returns a React element and calls it instead of implementing its own render logic.</p>
+
+                <h4>Why to Use It</h4>
+                <p>Like HOCs, the render props pattern was used to share stateful logic. The component using the render prop encapsulates the behavior (e.g., tracking mouse position) but delegates the rendering logic to its parent, making it highly reusable.</p>
+
+                <h4>How to Use It</h4>
+                <p>The component calls the function passed in its `render` prop, providing its internal state as arguments to that function.</p>
+                <pre><code>// This component encapsulates the logic of tracking mouse position.
+class MouseTracker extends React.Component {
+  state = { x: 0, y: 0 };
+
+  handleMouseMove = (event) => {
+    this.setState({ x: event.clientX, y: event.clientY });
+  };
+
+  render() {
+    return (
+      &lt;div style={{ height: '100vh' }} onMouseMove={this.handleMouseMove}&gt;
+        {/* It calls the render prop with its state, delegating rendering. */}
+        {this.props.render(this.state)}
+      &lt;/div&gt;
+    );
+  }
+}
+
+// How to use it:
+function App() {
+  return (
+    &lt;MouseTracker render={mouse => (
+      &lt;h1&gt;The mouse position is ({mouse.x}, {mouse.y})&lt;/h1&gt;
+    )} /&gt;
+  );
+}</code></pre>
+
+                <h4>Common Pitfalls & Gotchas</h4>
+                <div class="callout pitfalls">
+                    <ul>
+                        <li><strong>Modern Relevance:</strong> Just like HOCs, the render props pattern has been almost entirely superseded by **custom hooks**. A `useMousePosition()` custom hook would achieve the same result with less code, no extra component nesting, and a simpler API.</li>
+                        <li><strong>Nesting Complexity:</strong> While it avoids wrapper hell, it can lead to deeply nested functions within the JSX, which can be hard to read.</li>
+                    </ul>
+                </div>
+
+                <div class="callout interview-questions">
+                    <h4>Interview Questions</h4>
+                    <ul>
+                        <li><strong>What is the render props pattern?</strong>
+                            <p>Answer: It's a pattern where a component shares its stateful logic by taking a function as a prop (often named `render`). The component then calls this function to render its output, passing its internal state as arguments. It inverts control: the component manages the logic, but the parent tells it what to render with that logic.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <h3>Error Boundaries</h3>
+                <h4>Explanation</h4>
+                <p>An Error Boundary is a special React component that catches JavaScript errors anywhere in its child component tree, logs those errors, and displays a fallback UI instead of letting the entire application crash.</p>
+
+                <h4>Why to Use It</h4>
+                <p>In a large application, a small error in a minor component shouldn't bring down the entire app. Error boundaries provide a way to gracefully handle production errors in UI components, ensuring a better user experience and making the application more robust.</p>
+
+                <h4>How to Use It</h4>
+                <p>An error boundary **must be a class component** that defines at least one of two specific lifecycle methods:</p>
+                <ul>
+                    <li><code>static getDerivedStateFromError(error)</code>: This method is called during the "render" phase after a descendant component throws an error. It should return a state object to update state, which will cause the fallback UI to be rendered.</li>
+                    <li><code>componentDidCatch(error, errorInfo)</code>: This method is called during the "commit" phase. It's used for side effects, like logging the error to an external service.</li>
+                </ul>
+                <pre><code>class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service
+    logErrorToMyService(error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return &lt;h1&gt;Something went wrong. Please refresh.&lt;/h1&gt;;
+    }
+
+    return this.props.children; 
+  }
+}
+
+// Usage:
+&lt;ErrorBoundary&gt;
+  &lt;MyRiskyComponent /&gt;
+&lt;/ErrorBoundary&gt;</code></pre>
+
+                <h4>Common Pitfalls & Gotchas</h4>
+                <div class="callout pitfalls">
+                    <ul>
+                        <li><strong>Must Be a Class Component:</strong> As of now, there is no hook equivalent for error boundaries. They must be implemented as class components.</li>
+                        <li><strong>Limited Scope:</strong> Error boundaries do **not** catch errors in:</li>
+                        <ul>
+                            <li>Event handlers (use a regular `try...catch` block for these).</li>
+                            <li>Asynchronous code (like `setTimeout` or `requestAnimationFrame` callbacks).</li>
+                            <li>Server-side rendering.</li>
+                            <li>The error boundary component itself.</li>
+                        </ul>
+                    </ul>
+                </div>
+
+                <div class="callout interview-questions">
+                    <h4>Interview Questions</h4>
+                    <ul>
+                        <li><strong>What is an Error Boundary and what are its limitations?</strong>
+                            <p>Answer: An Error Boundary is a class component that catches JS errors in its child tree and displays a fallback UI. Its main limitation is that it cannot catch errors in event handlers, async code, or in itself. For event handlers, you must use a standard `try...catch` block.</p>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- State Management Section -->
+            <section id="state-management">
+                <h2>State Management</h2>
+                <p>State management is one of the most critical aspects of any large-scale React application. As an application grows, sharing state between components that are far apart in the component tree becomes complex. This section covers the spectrum of solutions, from React's built-in tools to powerful external libraries.</p>
+
+                <h3>Context API</h3>
+                <h4>Explanation</h4>
+                <p>The Context API is React's built-in solution to the problem of **prop drilling**. It provides a way to create a "global" state for a part of your component tree and allows any component within that tree to access the state without it being passed down explicitly through every level of props.</p>
+
+                <h4>Why to Use It</h4>
+                <p>You should use the Context API when you have data that many components at different nesting levels need. Good examples include UI theme (dark/light mode), user authentication status, or the currently selected language. These are typically values that change infrequently.</p>
+
+                <h4>How to Use It</h4>
+                <p>The process involves three steps:</p>
+                <ol>
+                    <li><strong>Create the Context:</strong> Use <code>React.createContext()</code> to create a context object. You can provide a default value that will be used if a component tries to consume the context without a Provider above it.</li>
+                    <li><strong>Provide the Context:</strong> Wrap a parent component in the `Context.Provider` component and pass the data you want to share into its `value` prop.</li>
+                    <li><strong>Consume the Context:</strong> In any child component that needs the data, use the <code>useContext()</code> hook to subscribe to the context and read its value.</li>
+                </ol>
+                <pre><code>// 1. Create the context
+import { createContext, useContext, useState, useMemo } from 'react';
+const ThemeContext = createContext(null);
+
+// 2. Provide the context
+function App() {
+  const [theme, setTheme] = useState('light');
+  const toggleTheme = () => setTheme(t => (t === 'light' ? 'dark' : 'light'));
+
+  // IMPORTANT: Memoize the value to prevent unnecessary re-renders
+  const value = useMemo(() => ({ theme, toggleTheme }), [theme]);
+
+  return (
+    &lt;ThemeContext.Provider value={value}&gt;
+      &lt;Toolbar /&gt;
+    &lt;/ThemeContext.Provider&gt;
+  );
+}
+
+// 3. Consume the context
+function ThemedButton() {
+  // The useContext hook makes this component re-render when the context value changes.
+  const { theme, toggleTheme } = useContext(ThemeContext);
+
+  return (
+    &lt;button onClick={toggleTheme} className={theme}&gt;
+      Toggle Theme
+    &lt;/button&gt;
+  );
+}</code></pre>
+
+                <h4>Common Pitfalls & Gotchas</h4>
+                <div class="callout pitfalls">
+                    <ul>
+                        <li><strong>Performance Issues:</strong> The biggest issue with Context is performance. When the `value` of a Provider changes, **every single component** that consumes that context will re-render, even if it only cares about a part of the value that didn't change. This makes it unsuitable for high-frequency updates (like form state).</li>
+                        <li><strong>Forgetting to Memoize the Value:</strong> If you pass an object or array directly to the `value` prop (e.g., `value={{ theme, user }}`), a new object is created on every render of the provider. This will cause all consumers to re-render on every parent render, even if the underlying data is the same. Always wrap the `value` object in `useMemo`.</li>
+                    </ul>
+                </div>
+
+                <div class="callout interview-questions">
+                    <h4>Interview Questions</h4>
+                    <ul>
+                        <li><strong>What is prop drilling and how does the Context API solve it?</strong>
+                            <p>Answer: Prop drilling is the process of passing props down through multiple layers of nested components that don't actually use the props, just to get them to a deeply nested child. The Context API solves this by creating a Provider that makes the data available to any component in the tree below it. A child component can then use the `useContext` hook to access that data directly, skipping all the intermediate components.</p>
+                        </li>
+                        <li><strong>When should you not use the Context API?</strong>
+                            <p>Answer: You should avoid using the Context API for state that updates frequently, such as form input state or data that changes in response to rapid events like mouse movement. Because any change to the context value causes all consuming components to re-render, it can easily lead to performance bottlenecks. For high-frequency updates, a more optimized state management library like Redux or Zustand is a better choice.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <h3>Redux & Redux Toolkit (RTK)</h3>
+                <h4>Explanation</h4>
+                <p>Redux is a predictable state container for JavaScript apps. It enforces a strict, one-way data flow, which makes application state easier to reason about and manage at scale. Its core principles are:</p>
+                <ol>
+                    <li><strong>Single Source of Truth:</strong> The entire state of your application is stored in a single object tree within a single **store**.</li>
+                    <li><strong>State is Read-Only:</strong> The only way to change the state is to dispatch an **action**, which is a plain object describing what happened.</li>
+                    <li><strong>Changes are made with Pure Functions:</strong> You write pure **reducers** that take the previous state and an action, and return the next state.</li>
+                </ol>
+                <p><strong>Redux Toolkit (RTK)</strong> is the official, recommended way to write Redux logic today. It was created to solve the common complaints about Redux being too "boilerplate-heavy."</p>
+
+                <h4>Why to Use It</h4>
+                <p>Use Redux for large, complex applications where:</p>
+                <ul>
+                    <li>You have a large amount of application state that is needed by many parts of the app.</li>
+                    <li>The app state is updated frequently.</li>
+                    <li>The logic to update the state is complex.</li>
+                    <li>You need powerful developer tools, such as time-travel debugging, to understand how your state changes over time.</li>
+                </ul>
+
+                <h4>How to Use It (with RTK)</h4>
+                <p>RTK simplifies Redux development significantly with two main APIs:</p>
+                <ul>
+                    <li><code>createSlice()</code>: This function accepts an initial state and an object of reducer functions. It automatically generates action creators and action types. It also uses the **Immer** library internally, which lets you write code that looks like it's "mutating" the state (e.g., `state.count++`), but converts it into a safe, immutable update under the hood.</li>
+                    <li><code>configureStore()</code>: This sets up the Redux store with sensible defaults, including automatically enabling the Redux DevTools and adding middleware like `redux-thunk` for basic async logic.</li>
+                </ul>
+                <pre><code>// features/counter/counterSlice.js
+import { createSlice } from '@reduxjs/toolkit';
+
+const counterSlice = createSlice({
+  name: 'counter',
+  initialState: { value: 0 },
+  reducers: {
+    // Redux Toolkit allows us to write "mutating" logic in reducers.
+    // It doesn't actually mutate the state because it uses the Immer library.
+    increment: (state) => {
+      state.value += 1;
+    },
+    decrement: (state) => {
+      state.value -= 1;
+    },
+    incrementByAmount: (state, action) => {
+      state.value += action.payload;
+    },
+  },
+});
+
+// Action creators are generated for each case reducer function
+export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+export default counterSlice.reducer;
+
+// app/store.js
+import { configureStore } from '@reduxjs/toolkit';
+import counterReducer from '../features/counter/counterSlice';
+
+export const store = configureStore({
+  reducer: {
+    counter: counterReducer,
+  },
+});</code></pre>
+
+                <h4>Common Pitfalls & Gotchas</h4>
+                <div class="callout pitfalls">
+                    <ul>
+                        <li><strong>Overusing Redux:</strong> Not all state belongs in Redux. Local component state that isn't shared (like whether a dropdown is open) should almost always remain in local component state using `useState`.</li>
+                        <li><strong>Mutating State in Classic Redux:</strong> In classic Redux (without RTK), you must never mutate the state inside a reducer. You must always return a new object. Forgetting this is a common source of bugs. RTK's `createSlice` solves this problem with Immer.</li>
+                    </ul>
+                </div>
+
+                <div class="callout interview-questions">
+                    <h4>Interview Questions</h4>
+                    <ul>
+                        <li><strong>What is Redux Toolkit and what problems does it solve?</strong>
+                            <p>Answer: Redux Toolkit (RTK) is the official, opinionated toolset for efficient Redux development. It solves three main problems with "classic" Redux: 1) It drastically reduces boilerplate code by using `createSlice` to auto-generate actions and reducers. 2) It simplifies store setup with `configureStore`. 3) It makes immutable updates much easier by integrating the Immer library, allowing you to write simpler, "mutating"-style code in your reducers.</p>
+                        </li>
+                        <li><strong>What is a Redux middleware? Give an example.</strong>
+                            <p>Answer: A middleware is a function that sits between dispatching an action and the moment it reaches the reducer. It provides a third-party extension point for handling side effects. The most common use case is for asynchronous actions. For example, `redux-thunk` is a middleware that allows you to write action creators that return a function instead of an action object. This function receives `dispatch` and `getState` as arguments and can be used to perform an API call and then dispatch a success or failure action based on the result.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <h3>Zustand, Jotai, and Recoil</h3>
+                <h4>Explanation</h4>
+                <p>These are modern, minimalist alternatives to Redux that often feel more "React-y" by embracing hooks more directly.</p>
+                <ul>
+                    <li><strong>Zustand:</strong> A minimal, fast, and un-opinionated state management solution. It feels like a global `useState` that you can access from anywhere without a Provider. It's very easy to set up and use.</li>
+                    <li><strong>Jotai / Recoil (Atomic State):</strong> These libraries propose a different model. Instead of one large state object, your state is composed of many small, independent pieces called **atoms**. Components subscribe only to the specific atoms they need.</li>
+                </ul>
+
+                <h4>Why and When to Use Them</h4>
+                <p>You would choose these libraries when you want global state management but find Redux to be too complex or boilerplate-heavy for your project's needs. </p>
+                <ul>
+                    <li><strong>Zustand</strong> is a great middle-ground when you want the power of a global store with a very simple API.</li>
+                    <li><strong>Jotai/Recoil</strong> are excellent when you need to optimize re-renders to the absolute maximum by having components subscribe to the smallest possible state units. This is ideal for highly interactive UIs like design tools or complex forms where many independent pieces of state can change.</li>
+                </ul>
+            </section>
+
+            <!-- React Router Section -->
+            <section id="react-router">
+                <h2>React Router</h2>
+                <p>React Router is the de-facto standard library for handling navigation and routing in React applications. It allows you to build a Single Page Application (SPA) with multiple views, keeping the UI in sync with the browser's URL without causing a full page refresh.</p>
+
+                <h3>Route Configuration and Nested Routes</h3>
+                <h4>Explanation</h4>
+                <p>Routing is the process of mapping a URL to a specific component that should be rendered. Modern React Router (v6+) uses a configuration-based approach where you define your routes as a JavaScript object. A key feature is **Nested Routes**, which allow you to build complex layouts with shared UI (like sidebars, headers, or dashboards). A parent route can render an <code>&lt;Outlet /&gt;</code> component, which acts as a placeholder where the matching child route component will be rendered.</p>
+
+                <h4>Why to Use It</h4>
+                <p>Nested routes are essential for creating maintainable layouts. Instead of repeating a sidebar and header on every single page component, you create a single layout component that contains the shared UI and an <code>&lt;Outlet /&gt;</code>. This keeps your code DRY (Don't Repeat Yourself) and makes layout changes much easier.</p>
+
+                <h4>How to Use It</h4>
+                <p>You define your routes using <code>createBrowserRouter</code> and provide it to your application via the <code>&lt;RouterProvider /&gt;</code> component.</p>
+                <pre><code>import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+
+// 1. Define your layout component
+function AppLayout() {
+  return (
+    &lt;div&gt;
+      &lt;header&gt;My App Header&lt;/header&gt;
+      &lt;nav&gt;Navigation Bar&lt;/nav&gt;
+      &lt;main&gt;
+        {/* Child routes will be rendered here */}
+        &lt;Outlet /&gt;
+      &lt;/main&gt;
+      &lt;footer&gt;Footer&lt;/footer&gt;
+    &lt;/div&gt;
+  );
+}
+
+// 2. Define your page components
+function HomePage() { return &lt;h1&gt;Home&lt;/h1&gt;; }
+function AboutPage() { return &lt;h1&gt;About Us&lt;/h1&gt;; }
+
+// 3. Create the router configuration
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: &lt;AppLayout /&gt;, // The parent route uses the layout
+    children: [ // Nested child routes
+      {
+        index: true, // This is the default child route for '/'
+        element: &lt;HomePage /&gt;,
+      },
+      {
+        path: 'about',
+        element: &lt;AboutPage /&gt;,
+      },
+    ],
+  },
+]);
+
+// 4. Provide the router to your app
+function App() {
+  return &lt;RouterProvider router={router} /&gt;;
+}</code></pre>
+
+                <h3>Navigation (Link, NavLink, useNavigate)</h3>
+                <h4>Explanation</h4>
+                <p>React Router provides several tools for navigating between routes.</p>
+                <ul>
+                    <li><code>&lt;Link&gt;</code>: The primary component for creating navigation links. It renders a standard <code>&lt;a&gt;</code> tag but intercepts the click event, preventing a full page reload and instead just updating the URL and rendering the new component via client-side routing.</li>
+                    <li><code>&lt;NavLink&gt;</code>: A special version of <code>&lt;Link&gt;</code> that knows whether or not it is "active" (i.e., if its `to` prop matches the current URL). This is perfect for navigation menus where you want to highlight the current page.</li>
+                    <li><code>useNavigate()</code>: A hook that gives you access to a `navigate` function. This is used for **programmatic navigation**, where you need to redirect a user after an action, such as a form submission or a successful login.</li>
+                </ul>
+
+                <h4>When to Use Them</h4>
+                <ul>
+                    <li>Use <code>&lt;Link&gt;</code> or <code>&lt;NavLink&gt;</code> for standard, user-driven navigation where the user is explicitly clicking a link to go somewhere.</li>
+                    <li>Use <code>useNavigate()</code> for imperative navigation that is triggered by application logic, not a direct user click on a link.</li>
+                </ul>
+
+                <h3>Route Parameters and Query Strings</h3>
+                <h4>Explanation</h4>
+                <p>These are two ways to pass dynamic information through the URL.</p>
+                <ul>
+                    <li><strong>Route Parameters:</strong> Used for required, unique identifiers that are part of the URL path itself (e.g., <code>/users/:userId</code>). They are essential for identifying a specific resource.</li>
+                    <li><strong>Query Strings:</strong> Used for optional data, such as filtering, sorting, or search terms. They are appended to the URL after a <code>?</code> (e.g., <code>/products?sort=price&category=electronics</code>).</li>
+                </ul>
+
+                <h4>How to Use Them</h4>
+                <ul>
+                    <li><strong>Parameters:</strong> Define the parameter in your route path with a colon (<code>path: 'users/:userId'</code>) and access it in the component using the <code>useParams()</code> hook.</li>
+                    <li><strong>Query Strings:</strong> Access them using the <code>useSearchParams()</code> hook, which returns the current search params and a function to update them.</li>
+                </ul>
+                <pre><code>// Accessing a route parameter
+import { useParams } from 'react-router-dom';
+function UserProfile() {
+  const { userId } = useParams(); // For a route like /users/123, userId will be "123"
+  return &lt;h1&gt;Profile for User {userId}&lt;/h1&gt;;
+}
+
+// Accessing query strings
+import { useSearchParams } from 'react-router-dom';
+function SearchPage() {
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('q'); // For a URL like /search?q=react, query will be "react"
+  return &lt;h1&gt;Showing results for: {query}&lt;/h1&gt;;
+}</code></pre>
+
+                <h3>Protected Routes and Authentication</h3>
+                <h4>Explanation</h4>
+                <p>A protected route is a route that only authenticated users can access. The common pattern is to create a wrapper component that acts as a gatekeeper. This component checks for an authentication status (e.g., from context or a store). If the user is authenticated, it renders the requested component via the <code>&lt;Outlet /&gt;</code>; otherwise, it redirects them to the login page using the <code>&lt;Navigate /&gt;</code> component.</p>
+
+                <h4>How to Use It</h4>
+                <pre><code>import { Navigate, Outlet } from 'react-router-dom';
+
+function ProtectedRoute() {
+  const { isAuthenticated } = useAuth(); // Assume this is a custom hook for auth status
+
+  if (!isAuthenticated) {
+    // The `replace` prop prevents the login page from being added to the history stack.
+    return &lt;Navigate to="/login" replace /&gt;;
+  }
+
+  return &lt;Outlet /&gt;;
+}
+
+// In router configuration:
+const router = createBrowserRouter([
+  { path: '/login', element: &lt;LoginPage /&gt; },
+  {
+    element: &lt;ProtectedRoute /&gt;,
+    children: [
+      { path: '/dashboard', element: &lt;Dashboard /&gt; },
+      { path: '/settings', element: &lt;Settings /&gt; },
+    ],
+  },
+]);</code></pre>
+
+                <div class="callout interview-questions">
+                    <h4>Interview Questions</h4>
+                    <ul>
+                        <li><strong>What is the difference between `&lt;Link&gt;` and a regular `&lt;a&gt;` tag?</strong>
+                            <p>Answer: A regular `&lt;a&gt;` tag will trigger a full page reload when clicked, causing the browser to request a new HTML document from the server. The `&lt;Link&gt;` component from React Router intercepts the click, prevents the default browser behavior, and handles the URL change on the client side, rendering the new component without a page refresh. This is the core of a Single Page Application's user experience.</p>
+                        </li>
+                        <li><strong>How would you implement a "Not Found" or 404 page in React Router?</strong>
+                            <p>Answer: You would define a catch-all route at the end of your route configuration. This is done by setting the `path` to an asterisk (`*`). This route will match any URL that hasn't been matched by the more specific routes defined above it. You would then render your `NotFoundPage` component for this route.</p>
+                        <pre><code>const router = createBrowserRouter([
+  { path: '/', element: &lt;HomePage /&gt; },
+  { path: '/about', element: &lt;AboutPage /&gt; },
+  // Catch-all route must be last
+  { path: '*', element: &lt;NotFoundPage /&gt; },
+]);</code></pre>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Performance Optimization Section -->
+        <section id="performance-optimization">
+            <h2>Performance Optimization</h2>
+            <p>Performance optimization in React is about making your application feel faster and more responsive to the user. This involves two main areas: reducing the initial load time (by shrinking the bundle size) and improving the update speed (by preventing unnecessary re-renders).</p>
+            <p><strong>The Golden Rule:</strong> Don't optimize prematurely. First, make it work, then make it right, and only then make it fast. Always use profiling tools to identify actual bottlenecks before applying these patterns.</p>
+
+            <h3>Profiling with React DevTools</h3>
+            <h4>Explanation</h4>
+            <p>The React DevTools browser extension includes a **Profiler** tab, which is your most important tool for diagnosing performance issues. It allows you to record user interactions and see exactly which components re-rendered, why they re-rendered, and how long they took.</p>
+
+            <h4>How to Use It</h4>
+            <ol>
+                <li>Open the Profiler tab in your browser's developer tools.</li>
+                <li>Click the "Record" button.</li>
+                <li>Perform the action in your app that feels slow.</li>
+                <li>Stop the recording.</li>
+                <li>Analyze the results using the **Flamegraph** chart (to visualize the render tree and find wide, slow components) and the **Ranked** chart (to see a list of components sorted by how long they took to render).</li>
+            </ol>
+            <p>Enabling the "Why did this render?" option in the profiler settings is invaluable for debugging unnecessary re-renders.</p>
+
+            <h3><code>React.memo</code></h3>
+            <h4>Explanation</h4>
+            <p><code>React.memo</code> is a Higher-Order Component (HOC) that memoizes a functional component. If the component is about to re-render with the exact same props as its previous render, React will skip the re-render and reuse the last rendered result. It performs a shallow comparison of the props object.</p>
+
+            <h4>When to Use It</h4>
+            <p>Use <code>React.memo</code> when **all** of the following are true:</p>
+            <ul>
+                <li>The component is a pure functional component (i.e., it will always render the same output given the same props).</li>
+                <li>The component renders often.</li>
+                <li>It usually renders with the exact same props.</li>
+                <li>The component is reasonably complex and its re-render is computationally expensive.</li>
+            </ul>
+            <p>Overusing it on simple components can actually harm performance slightly, as the prop comparison itself has a small cost.</p>
+
+            <h4>How to Use It</h4>
+            <pre><code>function MyComponent({ someProp }) {
+  // Expensive rendering logic...
+}
+
+// Wrap the component in React.memo before exporting.
+export default React.memo(MyComponent);</code></pre>
+
+            <h4>Common Pitfalls & Gotchas</h4>
+            <div class="callout pitfalls">
+                <ul>
+                    <li><strong>Passing Non-Primitive Props:</strong> If you pass objects, arrays, or functions as props, they will have a new reference on every parent render. This will cause the shallow prop comparison to fail every time, making <code>React.memo</code> useless. To fix this, you must memoize these props in the parent component using <code>useMemo</code> (for objects/arrays) or <code>useCallback</code> (for functions).</li>
+                </ul>
+            </div>
+
+            <h3><code>useMemo</code> and <code>useCallback</code></h3>
+            <h4>Explanation</h4>
+            <p>These are hooks used for optimization *inside* your components.</p>
+            <ul>
+                <li><code>useMemo</code>: Memoizes a **value**. It takes a function and a dependency array. It will only re-run the function (and re-compute the value) if one of the dependencies has changed.</li>
+                <li><code>useCallback</code>: Memoizes a **function**. It returns the same function instance between renders as long as its dependencies have not changed. This is crucial for maintaining referential equality.</li>
+            </ul>
+
+            <h4>When to Use Them</h4>
+            <ul>
+                <li>Use <code>useMemo</code> to skip expensive calculations on every render (e.g., filtering or sorting a large array).</li>
+                <li>Use <code>useCallback</code> when passing a callback function as a prop to an optimized child component (one wrapped in <code>React.memo</code>) to prevent that child from re-rendering unnecessarily.</li>
+            </ul>
+
+            <h3>Bundle Analysis and Code Splitting</h3>
+            <h4>Explanation</h4>
+            <p>This is about optimizing the **initial load time** of your app. Your application gets compiled into a single, large JavaScript file (a "bundle").</p>
+            <ul>
+                <li><strong>Bundle Analysis:</strong> The process of looking inside that bundle to see what's making it big. Use a tool like <code>webpack-bundle-analyzer</code> or <code>source-map-explorer</code> to generate a visual map of your bundle, showing the size of each library and component.</li>
+                <li><strong>Code Splitting:</strong> The process of breaking that large bundle into smaller chunks that can be loaded on demand.</li>
+            </ul>
+
+            <h4>How to Use It</h4>
+            <p>The primary way to implement code splitting is **route-based splitting** using <code>React.lazy()</code> and <code>&lt;Suspense&gt;</code>. This ensures the user only downloads the JavaScript necessary for the initial view.</p>
+            <pre><code>import React, { Suspense } from 'react';
+
+// This component will be loaded in a separate chunk only when it's needed.
+const OtherComponent = React.lazy(() => import('./OtherComponent'));
+
+function MyApp() {
+  return (
+    &lt;div&gt;
+      &lt;Suspense fallback={&lt;div&gt;Loading...&lt;/div&gt;}&gt;
+        &lt;OtherComponent /&gt;
+      &lt;/Suspense&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+            <h3>Lazy Loading Images and Components</h3>
+            <h4>Explanation</h4>
+            <p>This is a specific application of code splitting and a general web performance technique. The idea is to not load an asset (an image or a component) until it's about to be visible on the screen.</p>
+
+            <h4>How to Use It</h4>
+            <ul>
+                <li><strong>Components:</strong> Use <code>React.lazy()</code> as described above.</li>
+                <li><strong>Images:</strong> The easiest and best method is to use the native <code>loading="lazy"</code> attribute on an <code>&lt;img&gt;</code> tag. For more control or to support older browsers, you can use the **Intersection Observer API** to detect when an image enters the viewport and then set its `src` attribute.</li>
+            </ul>
+
+            <h3>Virtual Scrolling for Large Lists</h3>
+            <h4>Explanation</h4>
+            <p>If you need to display a list with thousands of items (e.g., a data grid, a social media feed), rendering all of them to the DOM at once would be incredibly slow and could crash the browser. **Virtual scrolling** (or "windowing") is a technique that solves this by only rendering the small subset of items that are currently visible on the screen.</p>
+
+            <h4>How to Use It</h4>
+            <p>You don't build this from scratch. You use a battle-tested library like <strong><code>react-window</code></strong> or the more powerful <strong><code>react-virtualized</code></strong>. These libraries calculate the total scrollable area but only mount the components for the visible items, recycling the DOM nodes as the user scrolls.</p>
+
+            <div class="callout interview-questions">
+                <h4>Interview Questions</h4>
+                <ul>
+                    <li><strong>How would you investigate and fix a slow-rendering component in a React application?</strong>
+                        <p>Answer: First, I would use the React DevTools Profiler to record the interaction that feels slow. I would analyze the flamegraph to identify the specific components that are taking the longest to render. I would also check the "Why did this render?" logs. If a component is re-rendering unnecessarily with the same props, I would wrap it in `React.memo` and ensure any non-primitive props passed to it are memoized with `useCallback` or `useMemo`. If the component itself is just doing an expensive calculation, I would memoize the result of that calculation within the component using `useMemo`.</p>
+                    </li>
+                    <li><strong>What is the difference between pagination, infinite scroll, and virtual scrolling?</strong>
+                        <p>Answer: All three are strategies for handling large lists. **Pagination** is the simplest, breaking the list into distinct pages. **Infinite scroll** automatically loads the next page of items when the user scrolls to the bottom. **Virtual scrolling** is the most performant; it only renders the items currently visible in the viewport, creating the illusion of a single, massive list while keeping the number of DOM nodes small and constant.</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Modern JavaScript Section -->
+        <section id="modern-javascript">
+            <h2>Modern JavaScript (ES6+)</h2>
+            <p>A deep understanding of modern JavaScript is the foundation upon which all modern frontend development is built. These features, introduced in ES2015 (ES6) and later, are essential for writing clean, efficient, and maintainable code.</p>
+
+            <h3>Arrow functions and lexical `this`</h3>
+            <h4>Explanation</h4>
+            <p>Arrow functions provide a more concise syntax for writing functions. More importantly, they behave differently with respect to the <code>this</code> keyword. A regular function has its own <code>this</code> binding, which is determined dynamically by how the function is called. An arrow function **does not** have its own <code>this</code>; it lexically inherits it from its surrounding scope. This means the value of <code>this</code> is determined by where the function is defined, not where it's called.</p>
+
+            <h4>Why to Use It</h4>
+            <p>Lexical `this` solves a whole class of common bugs in JavaScript, especially with callbacks. Before arrow functions, developers had to use workarounds like <code>const self = this;</code> or <code>.bind(this)</code> to preserve the correct `this` context inside a callback.</p>
+
+            <h4>How to Use It</h4>
+            <pre><code>function OldDog() {
+  this.age = 0;
+
+  setInterval(function() {
+    // `this` here is the `window` object or `undefined` in strict mode, NOT the Dog instance.
+    // this.age++; // This would fail.
+  }, 1000);
+}
+
+function ModernDog() {
+  this.age = 0;
+
+  setInterval(() => {
+    // The arrow function inherits `this` from the ModernDog constructor.
+    this.age++; // This works perfectly.
+    console.log(this.age);
+  }, 1000);
+}
+
+const fido = new ModernDog();</code></pre>
+
+            <h3>Destructuring and Spread/Rest Operators</h3>
+            <h4>Explanation</h4>
+            <ul>
+                <li><strong>Destructuring:</strong> A syntax that allows you to unpack values from arrays or properties from objects into distinct variables.</li>
+                <li><strong>Spread Operator (<code>...</code>):</strong> Expands an iterable (like an array or object) into its individual elements. It's used for making shallow copies, merging arrays/objects, or passing elements as individual arguments to a function.</li>
+                <li><strong>Rest Operator (<code>...</code>):</strong> Looks the same as spread but does the opposite. It collects the *rest* of the elements into a single array or object. It's used in function arguments or on the left side of a destructuring assignment.</li>
+            </ul>
+
+            <h4>How to Use It</h4>
+            <pre><code>// Destructuring
+const user = { id: 1, name: 'Alice', age: 30 };
+const { name, age } = user;
+
+// Spread
+const arr1 = [1, 2];
+const arr2 = [...arr1, 3, 4]; // [1, 2, 3, 4]
+
+// Rest
+function sum(...numbers) {
+  return numbers.reduce((acc, num) => acc + num, 0);
+}
+sum(1, 2, 3, 4); // returns 10</code></pre>
+
+            <h3>Promises, `async/await`, and Error Handling</h3>
+            <h4>Explanation</h4>
+            <p>These are the tools for managing asynchronous operations (like API calls) in modern JavaScript.</p>
+            <ul>
+                <li><strong>Promise:</strong> An object that represents the eventual completion (or failure) of an asynchronous operation. It can be in one of three states: pending, fulfilled, or rejected.</li>
+                <li><strong><code>async/await</code>:</strong> Syntactic sugar built on top of Promises. It lets you write asynchronous code that *looks* and behaves like synchronous code, making it much easier to read and reason about. The <code>async</code> keyword makes a function return a Promise, and the <code>await</code> keyword pauses the function's execution until a Promise settles.</li>
+            </ul>
+
+            <h4>How to Use It (with Error Handling)</h4>
+            <p>With <code>async/await</code>, you use a standard <code>try...catch</code> block for error handling, which is much cleaner than the <code>.catch()</code> chains of Promises.</p>
+            <pre><code>async function fetchData(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      // Manually throw an error for bad HTTP statuses (4xx, 5xx)
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Failed to fetch data:', error);
+    // Re-throw the error or return a default value
+    throw error;
+  }
+}</code></pre>
+
+            <h3>Modules (import/export)</h3>
+            <h4>Explanation</h4>
+            <p>ES6 Modules are the standard for organizing JavaScript code into separate, reusable files. They are static, meaning the dependencies are resolved at compile time, not runtime.</p>
+            <ul>
+                <li><strong>Named Export:</strong> Used to export multiple values from a single file. They must be imported using the exact same name and curly braces <code>{...}</code>.</li>
+                <li><strong>Default Export:</strong> Used to export a single "main" value from a file. A file can have only one default export, and it can be imported with any name.</li>
+            </ul>
+
+            <h3>Classes and Inheritance</h3>
+            <h4>Explanation</h4>
+            <p>The <code>class</code> keyword provides a cleaner, more familiar syntax for creating constructor functions and implementing inheritance. It is important to understand that this is **syntactic sugar** over JavaScript's existing **prototypal inheritance** model; it does not introduce a new object-oriented inheritance model to the language.</p>
+
+            <h3>Map, Set, WeakMap, WeakSet</h3>
+            <h4>Explanation</h4>
+            <ul>
+                <li><strong>Set:</strong> A collection of **unique** values of any type. Great for quickly removing duplicates from an array.</li>
+                <li><strong>Map:</strong> A collection of key-value pairs. Unlike plain objects, a Map can use **any value** (including objects and functions) as a key. It also maintains insertion order.</li>
+                <li><strong>WeakMap & WeakSet:</strong> "Weak" versions of Map and Set. The "weak" refers to how they handle references. If an object stored in a WeakMap or WeakSet is the *only* reference to that object left in the program, the garbage collector is free to delete it. This is a specific tool to prevent memory leaks, particularly when associating metadata with objects that you don't control the lifecycle of.</li>
+            </ul>
+
+            <div class="callout interview-questions">
+                <h4>Interview Questions</h4>
+                <ul>
+                    <li><strong>What is the difference between `let`, `const`, and `var`?</strong>
+                        <p>Answer: `var` is function-scoped and is hoisted to the top of its scope with an initial value of `undefined`. `let` and `const` are block-scoped (scoped to the nearest curly braces) and are also hoisted, but they are not initialized. They are in a "Temporal Dead Zone" until their declaration is reached, which prevents them from being accessed before they are declared. `const` is like `let` but its value cannot be reassigned after declaration.</p>
+                    </li>
+                    <li><strong>What is a Promise? Can you explain `Promise.all`?</strong>
+                        <p>Answer: A Promise is an object representing the eventual result of an asynchronous operation. `Promise.all` is a static method that takes an array of Promises as input. It returns a single new Promise that fulfills when **all** of the input Promises have fulfilled, returning an array of their results. If **any** of the input Promises reject, `Promise.all` immediately rejects with the reason of the first Promise that rejected.</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Advanced JavaScript Section -->
+        <section id="advanced-javascript">
+            <h2>Advanced JavaScript Concepts</h2>
+            <p>These are the concepts that test the depth of a developer's JavaScript knowledge. They explain the "why" behind the language's behavior and are often the focus of senior-level interviews.</p>
+
+            <h3>Closures and Lexical Scoping</h3>
+            <h4>Explanation</h4>
+            <p>A **closure** is the combination of a function and the lexical environment within which that function was declared. In simpler terms, a closure gives you access to an outer function’s scope from an inner function. Even after the outer function has finished executing, the inner function still "remembers" and has access to the variables and scope of its parent.</p>
+            <p>This is possible because JavaScript has **lexical scoping**, which means the scope of a variable is determined by its position in the code at the time of writing, not at runtime.</p>
+
+            <h4>Why to Use It</h4>
+            <p>Closures are not something you explicitly create; they are a natural result of how JavaScript works. They are fundamental to many important patterns:</p>
+            <ul>
+                <li><strong>Data Privacy / Encapsulation:</strong> Creating private variables and methods that cannot be accessed from outside a module (the Module Pattern).</li>
+                <li><strong>Stateful Functions:</strong> Creating functions that can maintain state between calls, as seen in function factories.</li>
+                <li><strong>Partial Application & Currying:</strong> Functional programming patterns that rely on closures to remember pre-applied arguments.</li>
+                <li><strong>React Hooks:</strong> Hooks like `useState` and `useEffect` use closures to associate state and effects with a specific component instance.</li>
+            </ul>
+
+            <h4>How to Use It</h4>
+            <pre><code>function createCounter() {
+  let count = 0; // `count` is a private variable, protected by the closure.
+
+  // The returned object has methods that "close over" the `count` variable.
+  return {
+    increment: function() {
+      count++;
+      console.log(count);
+    },
+    decrement: function() {
+      count--;
+      console.log(count);
+    }
+  };
+}
+
+const counterA = createCounter();
+counterA.increment(); // 1
+counterA.increment(); // 2
+
+const counterB = createCounter();
+counterB.increment(); // 1 (counterB has its own separate `count` variable)
+
+// You cannot access `count` directly: console.log(counterA.count); // undefined</code></pre>
+
+            <h3>Hoisting and Temporal Dead Zone</h3>
+            <h4>Explanation</h4>
+            <p>Hoisting is JavaScript's behavior of treating declarations as if they were "moved" to the top of their scope before the code is executed. It's a result of the engine making two passes: a compilation pass to set up memory for declarations, and an execution pass to run the code.</p>
+            <ul>
+                <li><code>var</code>: Is hoisted and initialized with <code>undefined</code>. You can access it before the declaration without an error.</li>
+                <li><code>function</code> declarations: Are hoisted and fully initialized. You can call a function before it's defined in the code.</li>
+                <li><code>let</code> and <code>const</code>: Are hoisted but **not initialized**. They are in a **Temporal Dead Zone (TDZ)** from the start of the scope until the line where they are declared. Accessing them in the TDZ throws a <code>ReferenceError</code>.</li>
+            </ul>
+
+            <h4>Why It Exists & Pitfalls</h4>
+            <p>Hoisting with <code>var</code> can lead to confusing bugs where variables are accessed before they are assigned a value. The TDZ for <code>let</code> and <code>const</code> was introduced to make variable scoping more predictable and to catch potential errors early.</p>
+
+            <h3>Event Loop and Microtasks</h3>
+            <h4>Explanation</h4>
+            <p>The Event Loop is the mechanism that allows JavaScript, a single-threaded language, to handle asynchronous operations without getting blocked. It coordinates between the **Call Stack**, **Web APIs**, the **Microtask Queue**, and the **Task Queue (or Macrotask Queue)**.</p>
+            <p>The priority of operations is the most critical concept:</p>
+            <ol>
+                <li>Execute all synchronous code in the current script until the Call Stack is empty.</li>
+                <li>After the stack is empty, execute **ALL** tasks currently in the **Microtask Queue** until it's empty. This includes callbacks from Promises (<code>.then</code>, <code>.catch</code>, <code>.finally</code>) and <code>queueMicrotask()</code>.</li>
+                <li>If the Microtask Queue is empty, execute **ONE** task from the **Task Queue**. This includes callbacks from <code>setTimeout</code>, <code>setInterval</code>, and user interaction events like clicks.</li>
+                <li>Repeat the cycle from step 2.</li>
+            </ol>
+
+            <div class="callout interview-questions">
+                <h4>Interview Questions</h4>
+                <ul>
+                    <li><strong>What will be the output of this code: `setTimeout(() => console.log('A'), 0); console.log('B'); Promise.resolve().then(() => console.log('C')); console.log('D');`?</strong>
+                        <p>Answer: The output will be `B`, `D`, `C`, `A`. 'B' and 'D' are synchronous and log first. The `Promise.then` callback ('C') is placed in the high-priority Microtask Queue. The `setTimeout` callback ('A') is placed in the lower-priority Task Queue. After the main script finishes, the Event Loop processes the entire Microtask Queue, logging 'C'. Only then does it move to the Task Queue to process the `setTimeout` and log 'A'.</p>
+                    </li>
+                </ul>
+            </div>
+
+            <h3>Prototypal Inheritance</h3>
+            <h4>Explanation</h4>
+            <p>In JavaScript, objects inherit directly from other objects. This is called prototypal inheritance. Every object has a hidden internal property (<code>[[Prototype]]</code>) that is a link to another object, its **prototype**. When you try to access a property on an object, the engine first checks the object itself. If it's not there, it follows the prototype link to the next object and checks there. This continues until it finds the property or reaches the end of the chain (where the prototype is `null`). This linked list of objects is the **prototype chain**.</p>
+
+            <h4>Why to Use It</h4>
+            <p>It's the fundamental mechanism for code reuse and inheritance in JavaScript. All built-in objects (Arrays, Dates, etc.) use the prototype chain to share methods (e.g., every array you create doesn't have its own `map` method; it inherits it from `Array.prototype`).</p>
+
+            <h4>How to Use It</h4>
+            <p>While you can use <code>Object.create()</code> to manually set an object's prototype, the most common way you interact with this system today is through the <code>class</code> syntax, which is just a more convenient syntax (syntactic sugar) over this underlying prototypal model.</p>
+
+            <h3>Call, Apply, Bind Methods</h3>
+            <h4>Explanation</h4>
+            <p>These are methods available on all functions that allow you to manually set the <code>this</code> value for a function when it's called.</p>
+            <ul>
+                <li><code>.call(thisArg, arg1, arg2, ...)</code>: **Executes the function immediately**. It sets <code>this</code> to <code>thisArg</code> and passes the subsequent arguments individually.</li>
+                <li><code>.apply(thisArg, [arg1, arg2, ...])</code>: **Executes the function immediately**. It's identical to <code>call</code>, but it takes its arguments as an array.</li>
+                <li><code>.bind(thisArg)</code>: **Does NOT execute the function**. It returns a **new function** that is permanently bound with the provided <code>this</code> value.</li>
+            </ul>
+
+            <h3>Debouncing and Throttling</h3>
+            <h4>Explanation</h4>
+            <p>These are two techniques to limit the rate at which a function gets called, crucial for performance with frequent events like scrolling, resizing, or typing.</p>
+            <ul>
+                <li><strong>Debounce:</strong> Groups a burst of events into a single one. It executes the function only after a certain period of **inactivity**. Use case: Autocomplete search bar. You don't want to fire an API request for every keystroke, only after the user has paused typing.</li>
+                <li><strong>Throttle:</strong> Guarantees that the function is executed at most once per specified time interval. Use case: Handling scroll or resize events. You want to update the UI based on the scroll position, but not hundreds of times per second. Once every 100ms is plenty.</li>
+            </ul>
+        </section>
+
+        <!-- Web APIs Section -->
+        <section id="web-apis">
+            <h2>Web APIs and Browser</h2>
+            <p>These are the APIs provided by the browser environment that allow your JavaScript code to interact with the web page, the browser itself, and external servers. A strong frontend developer must be an expert in using these tools to create rich, interactive applications.</p>
+
+            <h3>DOM Manipulation and Traversal</h3>
+            <h4>Explanation</h4>
+            <p>The DOM (Document Object Model) is the browser's tree-like representation of your HTML document. JavaScript can use the DOM API to find elements (<code>querySelector</code>), change them (<code>.textContent</code>, <code>.setAttribute</code>), and add/remove them (<code>createElement</code>, <code>appendChild</code>). It's important to know that setting <code>.innerHTML</code> with untrusted user input is a security risk (XSS).</p>
+
+            <h3>Event Bubbling and Capturing</h3>
+            <h4>Explanation</h4>
+            <p>When an event occurs on an element, it travels in two phases: the **Capturing Phase** (down from the window to the target) and the **Bubbling Phase** (up from the target to the window). By default, event listeners operate in the bubbling phase. This mechanism enables **event delegation**, a memory-efficient pattern where you attach a single listener to a parent to handle events from all its children.</p>
+
+            <h3>Fetch API and XMLHttpRequest</h3>
+            <h4>Explanation</h4>
+            <p><strong>Fetch API</strong> is the modern, Promise-based API for making HTTP requests. It is the standard for new development. A key gotcha is that <code>fetch()</code> only rejects on network errors, not on HTTP error statuses like 404 or 500. You must manually check the <code>response.ok</code> property to handle these cases.</p>
+
+            <h3>Web Storage (localStorage, sessionStorage)</h3>
+            <h4>Explanation</h4>
+            <p>A simple key-value store in the browser. <strong>localStorage</strong> is persistent and shared across all tabs from the same origin. <strong>sessionStorage</strong> lasts only for the duration of the browser tab. Both can only store strings and are synchronous, so they should not be overused.</p>
+
+            <h3>Web Workers and Service Workers</h3>
+            <h4>Explanation</h4>
+            <p>These are scripts that run on a background thread. A **Web Worker** is for general-purpose, heavy computation to avoid freezing the UI. A **Service Worker** is a specialized worker that acts as a programmable network proxy, enabling key PWA features like offline support and push notifications.</p>
+
+            <h3>Intersection Observer API</h3>
+            <h4>Explanation</h4>
+            <p>A modern, highly performant way to know when an element enters the browser's viewport. It is the best tool for implementing lazy loading of images and infinite scrolling.</p>
+
+            <h3>History API</h3>
+            <h4>Explanation</h4>
+            <p>This API gives you programmatic access to the browser's session history. Methods like <code>history.pushState()</code> and the <code>popstate</code> event are the engine that powers client-side routing in SPAs, allowing libraries like React Router to change the URL without a full page refresh.</p>
+
+            <h3>WebSockets</h3>
+            <h4>Explanation</h4>
+            <p>WebSockets provide a persistent, **two-way** communication channel between a client and a server. Unlike the request-response model of HTTP, where the client must always initiate communication, WebSockets allow the server to "push" data to the client at any time, making them essential for real-time applications like chat, live notifications, and multiplayer games.</p>
+        </section>
+
+        <!-- CSS Section -->
+        <section id="css-styling">
+            <h2>CSS and Styling</h2>
+            <p>CSS (Cascading Style Sheets) is what brings a web application to life. A full-stack developer is expected to be proficient in modern CSS techniques to build beautiful, responsive, and maintainable user interfaces. This section covers the most important concepts in modern styling.</p>
+
+            <h3>CSS Grid and Flexbox</h3>
+            <h4>Explanation</h4>
+            <p>These are the two pillars of modern CSS layout. The key is knowing which one to use: <strong>Flexbox</strong> is for layout in **one dimension** (a row or a column). <strong>CSS Grid</strong> is for layout in **two dimensions** (rows and columns at the same time). They work wonderfully together, often with Grid for the main page structure and Flexbox for the components inside.</p>
+
+            <h3>CSS-in-JS libraries (styled-components, emotion)</h3>
+            <h4>Explanation</h4>
+            <p>A pattern where you write CSS styles directly inside your JavaScript files. This provides benefits like automatic scoping (no class name collisions), dynamic styling based on props, and colocation of component logic and styles.</p>
+
+            <h3>CSS Modules</h3>
+            <h4>Explanation</h4>
+            <p>An alternative to CSS-in-JS for scoping. You write normal CSS in a <code>.module.css</code> file, and the build process automatically transforms your class names into unique, locally-scoped identifiers, which you then import and use in your components.</p>
+
+            <h3>Responsive Design and Media Queries</h3>
+            <h4>Explanation</h4>
+            <p>This involves making your website look and work great on any screen size. The best practice is a **Mobile First** approach, where you write your base CSS for the smallest screen and then use **media queries** (e.g., <code>@media (min-width: 768px)</code>) to add or modify styles as the screen gets larger.</p>
+
+            <h3>CSS Animations and Transitions</h3>
+            <h4>Explanation</h4>
+            <p><strong>Transitions</strong> are for simple, two-state animations (e.g., a hover effect). <strong>Animations</strong> (with <code>@keyframes</code>) are for complex, multi-step animations. For best performance, you should almost exclusively animate the <code>transform</code> and <code>opacity</code> properties, as they can be offloaded to the GPU.</p>
+
+            <h3>CSS Custom Properties (Variables)</h3>
+            <h4>Explanation</h4>
+            <p>A way to define reusable values directly in your CSS using a <code>--</code> prefix (e.g., <code>--main-color: blue;</code>) and using them with the <code>var()</code> function. Unlike preprocessor variables, they are dynamic and can be updated with JavaScript in real-time, making them incredibly powerful for tasks like theming.</p>
+
+            <h3>Preprocessors (Sass, Less)</h3>
+            <h4>Explanation</h4>
+            <p>Tools that extend CSS with features it doesn't natively have, like variables, nesting, mixins, and functions. While essential for many years, their necessity has decreased as native CSS has become more powerful with features like Custom Properties and native nesting. They are still valuable for their advanced logic capabilities (mixins, functions) in large-scale design systems.</p>
+        </section>
+
+    </main>
+    </div>
+</body>
+</html>
